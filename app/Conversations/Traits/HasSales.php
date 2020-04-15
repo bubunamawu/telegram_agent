@@ -67,11 +67,7 @@ trait HasSales
     {
         $sale = $this->getSaleDescription($id);
         $this->ask($sale,function(Answer $answer) use($id){
-            if($this->ensureButtonClicked($answer)){
-                return;
-            }
-            if($answer->getValue() == 'telegram'){
-                $this->displaySales();
+            if(!$this->ensureButtonClicked($answer)){
                 return;
             }
             switch ($answer->getValue()){
@@ -84,8 +80,15 @@ trait HasSales
                 case 'telegram':
                     $this->telegramSale($id);
                     break;
+                case 'back':
+                    $this->displaySales();
+                    break;
+                case 'quit':
+                    $this->say(Emoji::postalHorn(). 'End of sales list');
+                    $this->stopsConversation($answer->getMessage());
+                    break;
             }
-            $this->say(Emoji::postalHorn(). 'Request notification has been sent');
+            $this->say(Emoji::postalHorn(). 'Request has been sent');
             $this->stopsConversation($answer->getMessage());
         },$this->generateSaleKeyboard()->toArray());
     }
@@ -116,6 +119,9 @@ trait HasSales
         }
         $keyboard->addRow(
             KeyboardButton::create('<< Back')->callbackData('back')
+        );
+        $keyboard->addRow(
+            KeyboardButton::create('Quit')->callbackData('quit')
         );
         return $keyboard;
     }
@@ -154,7 +160,6 @@ trait HasSales
                     'Content-Type' => 'application/json',
                 ]
             ]);
-            $this->say(Emoji::constructionWorkerDarkSkinTone().'Your request is being proccessed.');
             return;
         }catch(\Exception $exception){
             $this->say(Emoji::doubleExclamationMark().'There was a problem with your request');
