@@ -148,7 +148,7 @@ trait HasSales
         );
         return $keyboard;
     }
-    protected function resendSale($id,$route)
+    protected function resendSale($id,$route,$data)
     {
         $client = new Client();
         $url = 'https://evds.misornu-backend.com/api/sales/';
@@ -158,7 +158,8 @@ trait HasSales
                 RequestOptions::HEADERS => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ]
+                ],
+                RequestOptions::JSON => $data
             ]);
             return;
         }catch(\Exception $exception){
@@ -167,13 +168,17 @@ trait HasSales
         }
     }
     public function smsSale($id){
-        $this->resendSale($id,'sms');
+        $this->resendSale($id,'sms',['phone_number' => $this->customer['account_number']]);
     }
     public function emailSale($id){
-        $this->resendSale($id,'email');
+        if(empty($this->customer['email'])){
+            $this->say(Emoji::doubleExclamationMark().'There is no email associated with your you account. Contact @monicliq to update');
+            return;
+        }
+        $this->resendSale($id,'email',['email' => $this->customer['email']]);
     }
     public function telegramSale($id){
-        $this->resendSale($id,'telegram');
+        $this->resendSale($id,'telegram',['telegram_id' => $this->customer['telegram_id']]);
     }
     public function getSale($id)
     {
