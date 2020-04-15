@@ -109,10 +109,12 @@ trait HasSales
     }
     public function generateSaleKeyboard(){
         $keyboard = Keyboard::create(Keyboard::TYPE_INLINE);
-        $keyboard->addRow(
-            KeyboardButton::create('Resend SMS')->callbackData('sms'),
-            KeyboardButton::create('Resend Email')->callbackData('email')
-        );
+        if($this->customer['class'] == 'Agent') {
+            $keyboard->addRow(
+                KeyboardButton::create('Resend SMS')->callbackData('sms'),
+                KeyboardButton::create('Resend Email')->callbackData('email')
+            );
+        }
         if($this->customer['class'] <> 'Agent'){
             $keyboard->addRow(
                 KeyboardButton::create('Telegram me!')->callbackData('telegram')
