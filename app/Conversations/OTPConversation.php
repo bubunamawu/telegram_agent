@@ -73,9 +73,9 @@ class OTPConversation extends BaseConversation
     {
         $question = Question::create('Which network does '.$this->payoutCustomer.' belong to?')
             ->addButtons([
-                Button::create($this->customer['MTN MoMo'])->value('MTN'),
-                //Button::create($this->customer['Voda Cash'])->value('VODA'),
-                //Button::create($this->customer['ATM'])->value('ATM')
+                Button::create('MTN MoMo')->value('MTN'),
+                //Button::create('Voda Cash')->value('VODA'),
+                //Button::create('ATM')->value('ATM')
             ]);
         $this->ask($question,function(Answer $answer){
             if(!$this->ensureButtonClicked($answer)){

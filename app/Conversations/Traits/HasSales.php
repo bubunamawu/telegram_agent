@@ -145,7 +145,7 @@ trait HasSales
     protected function resendSale($id,$route)
     {
         $client = new Client();
-        $url = 'http://evds.misornu-backend.com/api/sales/';
+        $url = 'https://evds.misornu-backend.com/api/sales/';
         $url .= $id.'/'.$route;
         try{
             $response = $client->post($url,[
@@ -154,8 +154,10 @@ trait HasSales
                     'Content-Type' => 'application/json',
                 ]
             ]);
+            $this->say(Emoji::constructionWorkerDarkSkinTone().'Your request is being proccessed.');
             return;
         }catch(\Exception $exception){
+            $this->say(Emoji::doubleExclamationMark().'There was a problem with your request');
             return;
         }
     }
