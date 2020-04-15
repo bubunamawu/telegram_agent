@@ -66,10 +66,16 @@ trait HasSales
     public function displaySaleDetails($id)
     {
         $sale = $this->getSaleDescription($id);
-        $this->ask($sale,function(Answer $answer) use($id){
-            if(!$this->ensureButtonClicked($answer)){
+        $this->ask($sale,function(Answer $answer) use($id) {
+            if (!$this->ensureButtonClicked($answer)) {
                 return;
             }
+            if($answer->getValue() == 'quit'){
+                $this->say(Emoji::postalHorn() . 'End of sales list');
+                $this->stopsConversation($answer->getMessage());
+                return;
+            };
+            $this->say(Emoji::postalHorn(). 'Request has been sent');
             switch ($answer->getValue()){
                 case 'sms':
                     $this->smsSale($id);
@@ -83,12 +89,7 @@ trait HasSales
                 case 'back':
                     $this->displaySales();
                     break;
-                case 'quit':
-                    $this->say(Emoji::postalHorn(). 'End of sales list');
-                    $this->stopsConversation($answer->getMessage());
-                    break;
             }
-            $this->say(Emoji::postalHorn(). 'Request has been sent');
             $this->stopsConversation($answer->getMessage());
         },$this->generateSaleKeyboard()->toArray());
     }
