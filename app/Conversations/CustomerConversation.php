@@ -28,7 +28,7 @@ class CustomerConversation extends BaseConversation implements HasCustomerInterf
             ->addButtons([
                 Button::create('Buy Voucher')->additionalParameters(['url' => 'https://telegra.ph/MONIcliq-How-to-Buy-04-14']),
                 Button::create('Manage Purchases')->value('manage_purchases'),
-                //Button::create('Verify OTP')->value('otp'),
+                Button::create('Verify OTP')->value('otp'),
                 Button::create('Price List')->additionalParameters(['url'=>'https://telegra.ph/MONIcliq-Price-List-04-14']),
                 Button::create('Bulk Discounts')->additionalParameters(['url' => 'https://telegra.ph/MONIcliq-Customer-Discounts-04-14']),
                 Button::create('Contact Support')->additionalParameters(['url' => 'https://t.me/monicliq']),
